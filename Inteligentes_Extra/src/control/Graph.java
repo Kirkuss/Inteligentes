@@ -147,4 +147,7 @@ public class Graph {
 		}
 		return null;
 	}
+	
+	public ArrayList<control.Node> getNodes() { return graphNodes;}
+	public ArrayList<Edge> getEdges() { return graphEdges;}
 }
