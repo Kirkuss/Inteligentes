@@ -8,10 +8,12 @@ import java.util.Queue;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import control.TreeNode;
+
 public class StressTest {
-	private Queue<control.Node> queueNode = new PriorityQueue<control.Node>();
-	private ArrayList<control.Node> listNode = new ArrayList<control.Node>();
-	private SortedSet<control.Node> sortNode = new TreeSet<control.Node>();
+	private Queue<TreeNode> queueNode = new PriorityQueue<TreeNode>();
+	private ArrayList<TreeNode> listNode = new ArrayList<TreeNode>();
+	private SortedSet<TreeNode> sortNode = new TreeSet<TreeNode>();
 	
 	private int counter = 1;
 	private long ini = 0;
@@ -22,7 +24,7 @@ public class StressTest {
 	public void testSortSet() {
 		while (true) {
 			try {
-				control.Node nodo = new control.Node();
+				TreeNode nodo = new TreeNode();
 				ini = System.currentTimeMillis();
 				sortNode.add(nodo);
 				fin = System.currentTimeMillis();
@@ -33,11 +35,11 @@ public class StressTest {
 					max = elapsed;
 				}
 				val += elapsed;
-				if (counter % 10000 == 0) {
+				if (counter % 100000 == 0) {
 					printResults(min, max, counter, val);
 					/*Iterator it = sortNode.iterator();
 					while(it.hasNext()) {
-						nodo = (control.Node) it.next();
+						nodo = (TreeNode) it.next();
 						System.out.println(nodo.getF());
 					}*/
 				}
@@ -51,7 +53,7 @@ public class StressTest {
 	public void testPQueue() {	
 		while (true) {
 			try {
-				control.Node nodo = new control.Node();
+				TreeNode nodo = new TreeNode();
 				ini = System.currentTimeMillis();
 				queueNode.add(nodo);
 				fin = System.currentTimeMillis();
@@ -62,7 +64,7 @@ public class StressTest {
 					max = elapsed;
 				}
 				val += elapsed;
-				if (counter % 10000 == 0) {
+				if (counter % 100000 == 0) {
 					printResults(min, max, counter, val);
 					/*for(int i = 0; i<10; i++) {
 						System.out.println(queueNode.poll().getF());
@@ -78,7 +80,7 @@ public class StressTest {
 	public void testList() {
 		while (true) {
 			try {
-				control.Node nodo = new control.Node();
+				TreeNode nodo = new TreeNode();
 				ini = System.currentTimeMillis();
 				listNode.add(nodo);
 				fin = System.currentTimeMillis();
@@ -89,7 +91,7 @@ public class StressTest {
 					max = elapsed;
 				}
 				val += elapsed;
-				if (counter % 10000 == 0) {
+				if (counter % 100000 == 0) {
 					ini = System.currentTimeMillis();
 					Collections.sort(listNode);
 					//Collectioms.reverse(listNode);
