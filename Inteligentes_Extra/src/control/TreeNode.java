@@ -1,21 +1,29 @@
 package control;
 
 public class TreeNode implements Comparable<TreeNode> {
-	private control.Node parent;
+	private TreeNode parent;
 	private State currentState;
 	private double cost;
 	private String action;
 	private int depth;
 	private double f;
 	
+	public TreeNode(TreeNode parent, State currentState, int depth, double cost, double f) {
+		this.parent = parent;
+		this.currentState = currentState;
+		this.depth = depth;
+		this.cost = cost;
+		this.f = f;
+	}
+	
 	public TreeNode() {
 		this.f = Math.random() * ((10000 - 0) + 1) + 0;
 	}
 	
-	public control.Node getParent() {
+	public TreeNode getParent() {
 		return parent;
 	}
-	public void setParent(control.Node parent) {
+	public void setParent(TreeNode parent) {
 		this.parent = parent;
 	}
 	public State getCurrentState() {

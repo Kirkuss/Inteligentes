@@ -13,6 +13,7 @@ import control.Edge;
 import control.Graph;
 import control.Problem;
 import control.ReadJSON;
+import control.SearchAlg;
 import control.State;
 import control.StateSpace;
 
@@ -39,6 +40,7 @@ public class Main {
 		ReadJSON reader = new ReadJSON();
 		pr = reader.Read("problema.json");
 		ss = new StateSpace(pr.getGraphlfile());
+		pr.setStateSpace(ss);
 		g = ss.getG();
 		System.out.println(pr.toString());
 		System.out.println(g.toString());
@@ -54,7 +56,8 @@ public class Main {
 			System.out.println("2 - Get the coordinates of an existing node");
 			System.out.println("3 - Get the list of adjacents nodes of an existing node");
 			System.out.println("4 - Get the list of succesors of a given state");
-			System.out.println("5 - Data Structure stress test");
+			System.out.println("5 - Basic search algortihms");
+			System.out.println("6 - Data Structure stress test");
 			int opt = sc.nextInt();
 			
 			switch(opt) {
@@ -71,10 +74,79 @@ public class Main {
 				printSuccessors();
 				break;
 			case 5:
+				basicSearch();
+				break;
+			case 6:
 				showTests(st);
 				break;
 			}
 		}
+	}
+	
+	private static void basicSearch() {
+		SearchAlg sa = new SearchAlg();
+		System.out.println("..");
+		System.out.println("1 - UCS");
+		System.out.println("2 - BFS");
+		System.out.println("3 - DFS");
+		
+		Scanner sc = new Scanner(System.in);
+		int opt = sc.nextInt();
+		
+		switch(opt) {
+		case 1:
+			System.out.println(sa.Busqueda_Acotada(pr, "UCS", 9999));
+			break;
+		case 2:
+			System.out.println(sa.Busqueda_Acotada(pr, "BFS", 9999));
+			break;
+		case 3:
+			DFSAsk();
+			break;
+		}		
+	}
+	
+	private static void DFSAsk() {
+		SearchAlg sa = new SearchAlg();
+		System.out.println("..");
+		System.out.println("1 - DFS");
+		System.out.println("2 - DLS");
+		System.out.println("3 - IDS");
+		
+		Scanner sc = new Scanner(System.in);
+		int opt = sc.nextInt();
+		
+		switch(opt) {
+		case 1:
+			System.out.println(sa.Busqueda_Acotada(pr, "DFS", 9999));
+			break;
+		case 2:
+			DLSAsk();
+			break;
+		case 3:
+			IDSAsk();
+			break;
+		}		
+	}
+	
+	private static void DLSAsk() {
+		SearchAlg sa = new SearchAlg();
+		System.out.println("Provide a depth limit: ");
+		
+		Scanner sc = new Scanner(System.in);
+		int Inc = sc.nextInt();
+		
+		System.out.println(sa.Busqueda_Acotada(pr, "DFS", Inc));		
+	}
+	
+	private static void IDSAsk() {
+		SearchAlg sa = new SearchAlg();
+		System.out.println("Provide an increment: ");
+		
+		Scanner sc = new Scanner(System.in);
+		int Inc = sc.nextInt();
+		
+		System.out.println(sa.Busqueda(pr, "DFS", 9999, Inc));		
 	}
 	
 	private static void printSuccessors() {
@@ -83,8 +155,7 @@ public class Main {
 		long id = aux.nextLong();
 		System.out.println("Checking if the node exists...");
 		if (g.BelongNode(Long.toString(id))) {
-			State st = new State();
-			st.setNode(Long.toString(id));
+			State st = new State(Long.toString(id));
 			System.out.println("Printing successors of state AT " + id + " : ");
 			ss.Succesors(st);
 		}

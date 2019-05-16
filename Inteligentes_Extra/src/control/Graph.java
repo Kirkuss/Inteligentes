@@ -21,7 +21,7 @@ public class Graph {
 	
 	private String X_KEY, Y_KEY, OSMID_KEY, NAME_KEY, LEN_KEY, OSMID_EDGE;
 	private Hashtable<String, control.Node> graphNodes = new Hashtable<String, control.Node>();
-	private Hashtable<String, Edge> graphEdges = new Hashtable<String, Edge>();
+	private Hashtable<String, ArrayList<Edge>> graphEdges = new Hashtable<String, ArrayList<Edge>>();
 	
 	public Graph(String file) throws ParserConfigurationException, SAXException, IOException {
 		System.out.println("XML file was readed in: " + readXML(file) + " ms\n");
@@ -89,6 +89,7 @@ public class Graph {
 		}
 		
 		NodeList eList = doc.getElementsByTagName("edge");
+		ArrayList<Edge> street = new ArrayList<Edge>();
 		
 		for (int i = 0; i<eList.getLength(); i++) {
 			Node eNode = eList.item(i);
@@ -107,8 +108,13 @@ public class Graph {
 				else if(dElement.getAttribute("key").equals(OSMID_EDGE)) EDGE_ID = dElement.getTextContent();
 			}
 			Edge e = new Edge(src, tgt, eName, length, EDGE_ID);
-			//System.out.println(e.ToString());
-			graphEdges.put(e.getID(),e);
+			if(graphEdges.containsKey(e.getID())) {
+				graphEdges.get(e.getID()).add(e);
+			}else {
+				street = new ArrayList<Edge>();
+				street.add(e);
+				graphEdges.put(e.getID(), street);
+			}
 		}
 		return System.currentTimeMillis() - t_init;
 	}
@@ -132,12 +138,15 @@ public class Graph {
 	public ArrayList<Edge> adjacentNode(String ID){
 		ArrayList<Edge> adjacents = new ArrayList<Edge>();
 		if(BelongNode(ID)) {
-			System.out.println("\nAdjacents of node " + ID + " : ");
+			//System.out.println("\nAdjacents of node " + ID + " : ");
 			Set<String> keys = graphEdges.keySet();
 			for(String key : keys) {
-				Edge e = graphEdges.get(key);
-				if (e.getSrc().equals(ID) || e.getTgt().equals(ID)) {
-					adjacents.add(e);
+				ArrayList<Edge> street = graphEdges.get(key);
+				for(int i = 0; i<street.size(); i++) {
+					Edge e = street.get(i);
+					if (e.getSrc().equals(ID)) {
+						adjacents.add(e);
+					}
 				}
 			}
 			return adjacents;
@@ -146,7 +155,7 @@ public class Graph {
 	}
 	
 	public Hashtable<String, control.Node> getNodes() { return graphNodes;}
-	public Hashtable<String, Edge> getEdges() { return graphEdges;}
+	public Hashtable<String, ArrayList<Edge>> getEdges() { return graphEdges;}
 	
 	public String toString() {
 		String xml = "### XML KEYS ###\nX_KEY : " + X_KEY + "\nY_KEY : " + Y_KEY +"\nOSMID_KEY : " + OSMID_KEY + "\nNAME_KEY : " + NAME_KEY + "\nLEN_KEY : " + LEN_KEY + "\nOSMID_EDGE : " + OSMID_EDGE + "\n################\n";
@@ -156,8 +165,10 @@ public class Graph {
 		}
 		nodes += "    |-------------|\n";
 		String edges = "\nReaded edges: \n";
-		for(Map.Entry<String, Edge> entry : graphEdges.entrySet()) {
-			edges += "OSMID ID : " + entry.getKey() + " : \n    " + entry.getValue().getSrc() + " ----> " + entry.getValue().getTgt() + "\nNAME : " + entry.getValue().getName() + "\nLENGTH : " + entry.getValue().getLength() + " m\n-\n";
+		for(Map.Entry<String, ArrayList<Edge>> entry : graphEdges.entrySet()) {
+			for(int i = 0; i<entry.getValue().size(); i++) {
+				edges += "OSMID ID : " + entry.getKey() + " : \n    " + entry.getValue().get(i).getSrc() + " ----> " + entry.getValue().get(i).getTgt() + "\nNAME : " + entry.getValue().get(i).getName() + "\nLENGTH : " + entry.getValue().get(i).getLength() + " m\n-\n";
+			}
 		}
 		edges += "|-------------|\n";
 		

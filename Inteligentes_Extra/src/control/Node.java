@@ -7,7 +7,7 @@ public class Node implements Comparable<Node>{
 	private double f;
 	
 	public Node() {
-		this.f = Math.random() * ((10000 - 0) + 1) + 0;
+		//this.f = Math.random() * ((10000 - 0) + 1) + 0;
 	}
 	
 	public Node(String ID, float X, float Y) {
@@ -21,6 +21,7 @@ public class Node implements Comparable<Node>{
 	public float getX() { return X;}
 	public float getY() { return Y;}
 	public double getF() { return f;} // TASK 2 F VALUE
+	public void setF(double f) { this.f = f;}
 	
 	public String toString() { return ID + " - " + X + "(X) " + Y + "(Y)";}
 	

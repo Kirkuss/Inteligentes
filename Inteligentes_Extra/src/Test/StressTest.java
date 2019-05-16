@@ -94,13 +94,9 @@ public class StressTest {
 				if (counter % 100000 == 0) {
 					ini = System.currentTimeMillis();
 					Collections.sort(listNode);
-					//Collectioms.reverse(listNode);
 					fin = System.currentTimeMillis();
 					printResults(min, max, counter, val);
 					System.out.println("Sorting time for " + counter + " nodes : " + (fin-ini) + " ms");
-					/*for (int i = 0; i<listNode.size(); i++) {
-						System.out.println(listNode.get(i).getF());
-					}*/
 				}
 				counter += 1;
 			}catch(Exception | Error exception) {

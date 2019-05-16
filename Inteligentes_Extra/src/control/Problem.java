@@ -1,14 +1,25 @@
 package control;
 
+import java.io.IOException;
+import java.util.PriorityQueue;
+
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.xml.sax.SAXException;
+
 public class Problem {
 	
 	 private String graphlmfile;
 	 private State IntSt;
-	 //private StateSpace stateSpace;
+	 private StateSpace stateSpace;
 	 
-	 public Problem(String json, State IntSt) {
+	 public Problem(String json, State IntSt) throws ParserConfigurationException, SAXException, IOException {
 		 this.graphlmfile = json;
 		 this.IntSt = IntSt;
+	 }
+	 
+	 public void setStateSpace(StateSpace ss) {
+		 this.stateSpace = ss;
 	 }
 	 
 	 public Problem() {
@@ -16,7 +27,11 @@ public class Problem {
 	}
 	 
 	public boolean isGoal(State st) {
-		return false;
+		return st.getListNodes().isEmpty();
+	}
+	
+	public PriorityQueue<control.Node> Sucesores(State st){
+		return stateSpace.Succesors(st);
 	}
 
 	public String getGraphlfile() {

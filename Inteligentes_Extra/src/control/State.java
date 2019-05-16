@@ -2,12 +2,20 @@ package control;
 
 import java.util.Arrays;
 import java.util.PriorityQueue;
+import java.util.ArrayList;
 
 public class State {
 	private String node;
-	//private control.Node currentPos;
-	private PriorityQueue<String> listNodes;
+	private ArrayList<String> listNodes;
 	private String id;
+	
+	public State() {
+		//Constructor vacio para generacion con gson
+	}
+	
+	public State(String node) {
+		this.node = node;
+	}
 	
 	public String getNode() {
 		return node;
@@ -17,19 +25,11 @@ public class State {
 		this.node = node;
 	}
 
-	/*public control.Node getCurrentPos() {
-		return currentPos;
-	}
-
-	public void setCurrentPos(control.Node currentPos) {
-		this.currentPos = currentPos;
-	}*/
-
-	public PriorityQueue<String> getListNodes() {
+	public ArrayList<String> getListNodes() {
 		return listNodes;
 	}
 
-	public void setListNodes(PriorityQueue<String> listNodes) {
+	public void setListNodes(ArrayList<String> listNodes) {
 		this.listNodes = listNodes;
 	}
 
@@ -44,12 +44,6 @@ public class State {
 	@Override
 	public String toString() {
 		String nodes = "    LIST OF NODES : ";
-		/*String[] ids = (String[]) listNodes.toArray();
-		Arrays.sort(ids);
-		for (int i = 0; i<ids.length; i++) {
-			
-			nodes += "\nNODE : " + ids[i];
-		}*/
 		nodes += listNodes;
 		return "    CURRENT : " + node + "\n" + nodes + "\n    id : " + id + "\n";
 	}

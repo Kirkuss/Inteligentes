@@ -12,11 +12,6 @@ public class ReadJSON {
 		Gson gson = new Gson();
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(jsonFile));
-			/*String line;
-			while((line = br.readLine()) != null) {
-				System.out.println(line);
-	
-			}*/
 			init = gson.fromJson(br, Problem.class);
 		}catch(Exception e) {
 			e.printStackTrace();

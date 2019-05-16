@@ -54,16 +54,11 @@ public class StateSpace {
 		if (!adjacents.equals(null)) {
 			for(int i = 0; i<adjacents.size(); i++) {
 				n = listNodes.get(adjacents.get(i).getTgt());
-				//Operaciones con el coste real mas adelante
-				if (n.getID().equals(st.getNode())) {
-					n = listNodes.get(adjacents.get(i).getSrc());
-					System.out.println("I'm in " + st.getNode() + " and i go to " + n.getID() + " with a cost of " + n.getF());
-				} else {
-					System.out.println("I'm in " + st.getNode() + " and i go to " + n.getID() + " with a cost of " + n.getF());
-				}
+				n.setF(adjacents.get(i).getLength());
+				//System.out.println("Going to: " + n.getID());
+				succesors.add(n);
 			}
 		}
-		
 		return succesors;
 	}
 	
