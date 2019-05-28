@@ -21,7 +21,7 @@ public class Graph {
 	
 	private String X_KEY, Y_KEY, OSMID_KEY, NAME_KEY, LEN_KEY, OSMID_EDGE;
 	private Hashtable<String, control.Node> graphNodes = new Hashtable<String, control.Node>();
-	private Hashtable<String, ArrayList<Edge>> graphEdges = new Hashtable<String, ArrayList<Edge>>();
+	private Hashtable<String, Edge> graphEdges = new Hashtable<String, Edge>();
 	
 	public Graph(String file) throws ParserConfigurationException, SAXException, IOException {
 		System.out.println("XML file was readed in: " + readXML(file) + " ms\n");
@@ -83,23 +83,21 @@ public class Graph {
 					else if(dElement.getAttribute("key").equals(OSMID_KEY)) ID = dElement.getTextContent();
 				}
 				control.Node n = new control.Node(ID, X, Y);
-				//System.out.println(n.ToString());
 				graphNodes.put(n.getID(), n);
 			}
 		}
 		
 		NodeList eList = doc.getElementsByTagName("edge");
-		ArrayList<Edge> street = new ArrayList<Edge>();
 		
 		for (int i = 0; i<eList.getLength(); i++) {
 			Node eNode = eList.item(i);
 			Element eElement = (Element) eNode;
-			
+
 			src = eElement.getAttribute("source");
 			tgt = eElement.getAttribute("target");
-			
+
 			data = eElement.getElementsByTagName("data");
-			
+
 			for (int j = 0; j<data.getLength(); j++) {
 				Node dNode = data.item(j);
 				Element dElement = (Element) dNode;
@@ -107,14 +105,8 @@ public class Graph {
 				else if(dElement.getAttribute("key").equals(LEN_KEY)) length = Float.valueOf(dElement.getTextContent());
 				else if(dElement.getAttribute("key").equals(OSMID_EDGE)) EDGE_ID = dElement.getTextContent();
 			}
-			Edge e = new Edge(src, tgt, eName, length, EDGE_ID);
-			if(graphEdges.containsKey(e.getID())) {
-				graphEdges.get(e.getID()).add(e);
-			}else {
-				street = new ArrayList<Edge>();
-				street.add(e);
-				graphEdges.put(e.getID(), street);
-			}
+			Edge e = new Edge(src, tgt, eName, length, src + tgt, EDGE_ID);
+			graphEdges.put(e.getSrc() + e.getTgt(), e);
 		}
 		return System.currentTimeMillis() - t_init;
 	}
@@ -135,18 +127,25 @@ public class Graph {
 		return null;
 	}
 	
+	public control.Node getNode(String key){
+		if(BelongNode(key)) {
+			return graphNodes.get(key);
+		}
+		return null;
+	}
+	
+	public Edge getEdge(String key) {
+		return graphEdges.get(key);
+	}
+	
 	public ArrayList<Edge> adjacentNode(String ID){
 		ArrayList<Edge> adjacents = new ArrayList<Edge>();
 		if(BelongNode(ID)) {
-			//System.out.println("\nAdjacents of node " + ID + " : ");
 			Set<String> keys = graphEdges.keySet();
 			for(String key : keys) {
-				ArrayList<Edge> street = graphEdges.get(key);
-				for(int i = 0; i<street.size(); i++) {
-					Edge e = street.get(i);
-					if (e.getSrc().equals(ID)) {
-						adjacents.add(e);
-					}
+				Edge e = graphEdges.get(key);
+				if (e.getSrc().equals(ID)) {
+					adjacents.add(e);
 				}
 			}
 			return adjacents;
@@ -155,7 +154,7 @@ public class Graph {
 	}
 	
 	public Hashtable<String, control.Node> getNodes() { return graphNodes;}
-	public Hashtable<String, ArrayList<Edge>> getEdges() { return graphEdges;}
+	public Hashtable<String, Edge> getEdges() { return graphEdges;}
 	
 	public String toString() {
 		String xml = "### XML KEYS ###\nX_KEY : " + X_KEY + "\nY_KEY : " + Y_KEY +"\nOSMID_KEY : " + OSMID_KEY + "\nNAME_KEY : " + NAME_KEY + "\nLEN_KEY : " + LEN_KEY + "\nOSMID_EDGE : " + OSMID_EDGE + "\n################\n";
@@ -165,10 +164,10 @@ public class Graph {
 		}
 		nodes += "    |-------------|\n";
 		String edges = "\nReaded edges: \n";
-		for(Map.Entry<String, ArrayList<Edge>> entry : graphEdges.entrySet()) {
-			for(int i = 0; i<entry.getValue().size(); i++) {
-				edges += "OSMID ID : " + entry.getKey() + " : \n    " + entry.getValue().get(i).getSrc() + " ----> " + entry.getValue().get(i).getTgt() + "\nNAME : " + entry.getValue().get(i).getName() + "\nLENGTH : " + entry.getValue().get(i).getLength() + " m\n-\n";
-			}
+		for(Map.Entry<String, Edge> entry : graphEdges.entrySet()) {
+			
+				edges += "EDGE ID : " + entry.getKey() + " - OSMID : " + entry.getValue().getOSMID() + " \n    " + entry.getValue().getSrc() + " ----> " + entry.getValue().getTgt() + "\nNAME : " + entry.getValue().getName() + "\nLENGTH : " + entry.getValue().getLength() + " m\n-\n";
+			
 		}
 		edges += "|-------------|\n";
 		

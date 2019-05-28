@@ -1,7 +1,7 @@
 package control;
 
-import java.util.Arrays;
-import java.util.PriorityQueue;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 
 public class State {
@@ -29,10 +29,26 @@ public class State {
 		return listNodes;
 	}
 
-	public void setListNodes(ArrayList<String> listNodes) {
-		this.listNodes = listNodes;
+	public void setListNodes(ArrayList<String> listNodes) throws NoSuchAlgorithmException {
+		this.listNodes = new ArrayList<String>(listNodes);
+		if(this.listNodes.contains(this.node)) {
+			this.listNodes.remove(this.node);
+		}
+		calculateMD5();
 	}
 
+	public void calculateMD5() throws NoSuchAlgorithmException {
+		String rep = this.node + " " + this.listNodes;
+		MessageDigest md = MessageDigest.getInstance("MD5");
+		md.update(rep.getBytes());
+		byte[] digest = md.digest();
+		StringBuffer sb = new StringBuffer();
+		for(byte b : digest) {
+			sb.append(String.format("%02x", b & 0xff));
+		}
+		this.id = sb.toString();
+	}
+	
 	public String getId() {
 		return id;
 	}

@@ -3,7 +3,6 @@ package control;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Hashtable;
-import java.util.PriorityQueue;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -40,8 +39,8 @@ public class StateSpace {
 	}
 	
 	
-	public PriorityQueue<control.Node> Succesors(State st){
-		PriorityQueue<control.Node> succesors = new PriorityQueue<control.Node>();
+	public ArrayList<control.Node> Succesors(State st){
+		ArrayList<control.Node> succesors = new ArrayList<control.Node>();
 		ArrayList <Edge> adjacents;
 		control.Node n = null;
 		
@@ -55,7 +54,6 @@ public class StateSpace {
 			for(int i = 0; i<adjacents.size(); i++) {
 				n = listNodes.get(adjacents.get(i).getTgt());
 				n.setF(adjacents.get(i).getLength());
-				//System.out.println("Going to: " + n.getID());
 				succesors.add(n);
 			}
 		}

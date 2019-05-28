@@ -2,7 +2,6 @@ package Test;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.SortedSet;
@@ -37,11 +36,6 @@ public class StressTest {
 				val += elapsed;
 				if (counter % 100000 == 0) {
 					printResults(min, max, counter, val);
-					/*Iterator it = sortNode.iterator();
-					while(it.hasNext()) {
-						nodo = (TreeNode) it.next();
-						System.out.println(nodo.getF());
-					}*/
 				}
 				counter += 1;
 			}catch(Exception | Error exception) {
@@ -66,9 +60,6 @@ public class StressTest {
 				val += elapsed;
 				if (counter % 100000 == 0) {
 					printResults(min, max, counter, val);
-					/*for(int i = 0; i<10; i++) {
-						System.out.println(queueNode.poll().getF());
-					}*/
 				}
 				counter += 1;
 			}catch(Exception | Error exception) {

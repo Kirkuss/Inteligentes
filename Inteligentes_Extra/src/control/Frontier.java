@@ -1,7 +1,7 @@
 package control;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.PriorityQueue;
 
 public class Frontier {
@@ -14,40 +14,7 @@ public class Frontier {
 	}
 	
 	public void Insert(TreeNode tn) {
-		if(frontier.isEmpty()) {
-			frontier.add(tn);
-			addedNodes.add(tn.getCurrentState().getNode());
-		}else if(!alreadyInside(tn)){
-			frontier.add(tn);
-			addedNodes.add(tn.getCurrentState().getNode());
-		}else {
-			if(isBetter(tn)) {
-				System.out.println("TreeNode updated in the fringe");
-			}
-		}
-	}
-	
-	private boolean isBetter(TreeNode tn) {
-		TreeNode to = new TreeNode();
-		ArrayList<TreeNode> reInsert = new ArrayList<TreeNode>();
-		while(!frontier.isEmpty()) {
-			to = frontier.poll();
-			if(to.getCurrentState().getNode().equals(tn.getCurrentState().getNode())) {
-				if(tn.getF() < to.getF()) {
-					reInsert.add(tn);
-					reInsert(reInsert);
-					return true;
-				}else {
-					reInsert.add(to);
-					reInsert(reInsert);
-					return false;
-				}
-			}else {
-				reInsert.add(to);
-			}
-		}
-		reInsert(reInsert);
-		return false;
+		frontier.add(tn);
 	}
 	
 	private void reInsert(ArrayList<TreeNode> reInsert) {
@@ -61,11 +28,7 @@ public class Frontier {
 	}
 	
 	public void insertaLista(PriorityQueue<TreeNode> LN) {
-		TreeNode tn = new TreeNode();
-		while(!LN.isEmpty()) {
-			System.out.println("Adding " + LN.peek().getCurrentState().getNode() + " to fringe with cost " + LN.peek().getF());
-			Insert(LN.poll());
-		}
+		while(!LN.isEmpty()) { Insert(LN.poll());}
 	}
 	
 	public void Clear() {
@@ -84,11 +47,15 @@ public class Frontier {
 	}
 	
 	public void printFringe() {      
-        Iterator<TreeNode> through = frontier.iterator() ;
-        while(through.hasNext() ) {
-                System.out.print(through.next().getCurrentState().getNode() + " ") ;
+		ArrayList<TreeNode> reInsert = new ArrayList<TreeNode>();
+        DecimalFormat df = new DecimalFormat("###.##");
+        while(!frontier.isEmpty()) {
+        		TreeNode next = frontier.poll();
+        		reInsert.add(next);
+                System.out.print(next.getCurrentState().getNode() + " COST: " + df.format(next.getF()) + " ") ;
         }
         System.out.println() ;
+        reInsert(reInsert);
 	}
 }
 //

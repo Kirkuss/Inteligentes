@@ -16,7 +16,6 @@ public class ReadJSON {
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
-		
 		return init;
 	}
 }
