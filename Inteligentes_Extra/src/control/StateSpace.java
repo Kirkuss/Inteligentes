@@ -3,6 +3,7 @@ package control;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.PriorityQueue;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -45,7 +46,7 @@ public class StateSpace {
 		control.Node n = null;
 		
 		if (BelongNode(st)) {
-			adjacents = g.adjacentNode(st.getNode());
+			adjacents = new ArrayList<Edge>(g.adjacentNode(st.getNode()));
 		}else {
 			return null;
 		}

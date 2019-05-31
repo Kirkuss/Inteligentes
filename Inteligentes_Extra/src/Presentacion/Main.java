@@ -30,6 +30,7 @@ public class Main {
 	static StateSpace ss;
 	static boolean prune;
 	static OutPutControl oc;
+	static int MAX_PROF;
 
 	public static void main(String[] args) throws ParserConfigurationException, SAXException, IOException, OutOfMemoryError, NoSuchAlgorithmException {
 		
@@ -54,7 +55,7 @@ public class Main {
 			System.out.println("4 - Get the list of succesors of a given state");
 			System.out.println("5 - Search algortihms");
 			System.out.println("6 - Data Structure stress test");
-			int opt = sc.nextInt();
+			int opt = IntValue(sc);
 			
 			switch(opt) {
 			case 1:
@@ -79,6 +80,28 @@ public class Main {
 		}
 	}
 	
+	private static void askProf(Scanner sc) {
+		System.out.println("Provode a maximum depth value for the search tree: ");	
+		try {
+			MAX_PROF = IntValue(sc);
+		}catch(Exception e) {
+			askProf(sc);
+		}
+	}
+	
+	private static int IntValue(Scanner sc) {
+		System.out.print("\n[IN] : ");
+		int value = 0;
+		try {
+			value = sc.nextInt();
+		}catch(Exception e) {
+			sc.nextLine();
+			value = IntValue(sc);
+		}
+		System.out.println();
+		return value;
+	}
+	
 	private static void basicSearch(Scanner sc) throws NoSuchAlgorithmException {
 		DateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
 		Date date = new Date();
@@ -95,13 +118,14 @@ public class Main {
 		System.out.println("4 - Greedy Search*");
 		System.out.println("5 - A*");
 		
-		int opt = sc.nextInt();
+		int opt = IntValue(sc);
+		askProf(sc);
 		
 		switch(opt) {
 		case 1:
 			result = "";
 			t_init = System.currentTimeMillis();
-			result = sa.Busqueda_Acotada(pr, "UCS", 9999);
+			result = sa.Busqueda_Acotada(pr, "UCS", MAX_PROF);
 			t_fin = System.currentTimeMillis();
 			result ="\nOUTPUT - TIME SPENT: " + df.format(t_fin - t_init) + " ms - PRUNE: " + prune + " - \n" + result  + "---";
 			System.out.println(result);
@@ -112,7 +136,7 @@ public class Main {
 		case 2:
 			result = "";
 			t_init = System.currentTimeMillis();
-			result = sa.Busqueda_Acotada(pr, "BFS", 9999);
+			result = sa.Busqueda_Acotada(pr, "BFS", MAX_PROF);
 			t_fin = System.currentTimeMillis();
 			result ="\nOUTPUT - TIME SPENT: " + df.format(t_fin - t_init) + " ms - PRUNE: " + prune + " - \n" + result  + "---";
 			System.out.println(result);
@@ -127,7 +151,7 @@ public class Main {
 			sa.setHeu(HeuAsk(sc));
 			result = "";
 			t_init = System.currentTimeMillis();
-			result = sa.Busqueda_Acotada(pr, "GRE", 9999);
+			result = sa.Busqueda_Acotada(pr, "GRE", MAX_PROF);
 			t_fin = System.currentTimeMillis();
 			result ="\nOUTPUT - TIME SPENT: " + df.format(t_fin - t_init) + " ms - PRUNE: " + prune + " - \n" + result  + "---";
 			System.out.println(result);
@@ -139,7 +163,7 @@ public class Main {
 			sa.setHeu(HeuAsk(sc));
 			result = "";
 			t_init = System.currentTimeMillis();
-			result = sa.Busqueda_Acotada(pr, "A*", 9999);
+			result = sa.Busqueda_Acotada(pr, "A*", MAX_PROF);
 			t_fin = System.currentTimeMillis();
 			result ="\nOUTPUT - TIME SPENT: " + df.format(t_fin - t_init) + " ms - PRUNE: " + prune + " - \n" + result  + "---";
 			System.out.println(result);
@@ -155,7 +179,7 @@ public class Main {
 		System.out.println("1 - H0 (Minimum distance between node and subgoals)");
 		System.out.println("2 - H1 (H0 + Minimum distance between subgoals)");
 		
-		int opt = sc.nextInt();
+		int opt = IntValue(sc);
 		
 		int def = 0;
 		
@@ -179,7 +203,7 @@ public class Main {
 		System.out.println("1 - YES");
 		System.out.println("2 - NO");
 		
-		int opt = sc.nextInt();
+		int opt = IntValue(sc);
 		
 		boolean def = false;
 		
@@ -210,13 +234,13 @@ public class Main {
 		System.out.println("2 - DLS");
 		System.out.println("3 - IDS");
 		
-		int opt = sc.nextInt();
+		int opt = IntValue(sc);
 		
 		switch(opt) {
 		case 1:
 			result = "";
 			t_init = System.currentTimeMillis();
-			result = sa.Busqueda_Acotada(pr, "DFS", 9999);
+			result = sa.Busqueda_Acotada(pr, "DFS", MAX_PROF);
 			t_fin = System.currentTimeMillis();
 			result ="\nOUTPUT - TIME SPENT: " + df.format(t_fin - t_init) + " ms - PRUNE: " + prune + " - \n" + result  + "---";
 			System.out.println(result);
@@ -244,7 +268,7 @@ public class Main {
 		double t_fin = 0;
 		DecimalFormat df = new DecimalFormat("###.##");
 		
-		int Inc = sc.nextInt();
+		int Inc = IntValue(sc);
 		
 		result = "";
 		t_init = System.currentTimeMillis();
@@ -268,11 +292,11 @@ public class Main {
 		double t_fin = 0;
 		DecimalFormat df = new DecimalFormat("###.##");
 		
-		int Inc = sc.nextInt();
+		int Inc = IntValue(sc);
 		
 		result = "";
 		t_init = System.currentTimeMillis();
-		result = sa.Busqueda(pr, "DFS", 9999, Inc);
+		result = sa.Busqueda(pr, "DFS", MAX_PROF, Inc);
 		t_fin = System.currentTimeMillis();
 		result ="\nOUTPUT - TIME SPENT: " + df.format(t_fin - t_init) + " ms - PRUNE: " + prune + " - \n" + result  + "---";
 		System.out.println(result);
@@ -339,7 +363,7 @@ public class Main {
 		System.out.println("4 - Exit");
 		System.out.println("Execution of the program will stop after any test");
 		
-		int opt = sc.nextInt();
+		int opt = IntValue(sc);
 		
 		switch(opt) {
 		case 1:

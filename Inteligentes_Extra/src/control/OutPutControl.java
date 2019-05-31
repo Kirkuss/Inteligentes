@@ -33,9 +33,9 @@ public class OutPutControl {
 			Graph G = pr.getStateSpace().getG();
 			State InSt = pr.getInSt();
 			ArrayList<String> listNodes = InSt.getListNodes();
-			wpt = "\n<wpt lat=\"" + G.positionNode(InSt.getNode())[1] + "\" lon=\"" + G.positionNode(InSt.getNode())[0] + "\" >\n\t<name>[I]" + InSt.getNode() + "</name>\n</wpt>\n";
+			wpt = "\n<wpt lat=\"" + G.positionNode(InSt.getNode())[0] + "\" lon=\"" + G.positionNode(InSt.getNode())[1] + "\" >\n\t<name>[I]" + InSt.getNode() + "</name>\n</wpt>\n";
 			for(int i = 0; i<listNodes.size(); i++) {
-				wpt = wpt + "<wpt lat=\"" + G.positionNode(listNodes.get(i))[1] + "\" lon=\"" + G.positionNode(listNodes.get(i))[0] + "\" >\n\t<name>[V]" + listNodes.get(i) + "</name>\n</wpt>\n";
+				wpt = wpt + "<wpt lat=\"" + G.positionNode(listNodes.get(i))[0] + "\" lon=\"" + G.positionNode(listNodes.get(i))[1] + "\" >\n\t<name>[V]" + listNodes.get(i) + "</name>\n</wpt>\n";
 			}
 
 			String trk = "\n<trk>\n";
@@ -60,10 +60,10 @@ public class OutPutControl {
 		Date date = new Date();
 		String result = "";
 		if(tn.getParent() == null) {
-			result += "\n\t<trkpt lat=\"" + G.positionNode(tn.getCurrentState().getNode())[1] + "\" lon=\"" + G.positionNode(tn.getCurrentState().getNode())[0] + "\" >\n\t\t<ele>0</ele>\n\t\t<time>" + dateFormat.format(date) + "</time>\n\t\t<name>" + tn.getCurrentState().getNode() + "</name>\n\t</trkpt>";
+			result += "\n\t<trkpt lat=\"" + G.positionNode(tn.getCurrentState().getNode())[0] + "\" lon=\"" + G.positionNode(tn.getCurrentState().getNode())[1] + "\" >\n\t\t<ele>0</ele>\n\t\t<time>" + dateFormat.format(date) + "</time>\n\t\t<name>" + tn.getCurrentState().getNode() + "</name>\n\t</trkpt>";
 			return result;
 		}else {
-			result += generateTrk(tn.getParent(), G) + "\n\t<trkpt lat=\"" + G.positionNode(tn.getCurrentState().getNode())[1] + "\" lon=\"" + G.positionNode(tn.getCurrentState().getNode())[0] + "\" >\n\t\t<ele>0</ele>\n\t\t<time>" + dateFormat.format(date) + "</time>\n\t\t<name>" + tn.getCurrentState().getNode() + "</name>\n\t</trkpt>";
+			result += generateTrk(tn.getParent(), G) + "\n\t<trkpt lat=\"" + G.positionNode(tn.getCurrentState().getNode())[0] + "\" lon=\"" + G.positionNode(tn.getCurrentState().getNode())[1] + "\" >\n\t\t<ele>0</ele>\n\t\t<time>" + dateFormat.format(date) + "</time>\n\t\t<name>" + tn.getCurrentState().getNode() + "</name>\n\t</trkpt>";
 		}
 		return result;
 	}

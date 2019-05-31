@@ -33,7 +33,7 @@ public class Graph {
 		String ID = "", src = "", tgt = "", eName = "", EDGE_ID = "";
 		float length = 0, X = 0, Y = 0;
 		
-		File f = new File(file);
+		File f = new File(file + ".xml");
 		
 		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
@@ -78,8 +78,8 @@ public class Graph {
 				for(int j = 0; j<data.getLength(); j++) {
 					Node dNode = data.item(j);
 					Element dElement = (Element) dNode;
-					if(dElement.getAttribute("key").equals(X_KEY)) X = Float.valueOf(dElement.getTextContent());
-					else if(dElement.getAttribute("key").equals(Y_KEY)) Y = Float.valueOf(dElement.getTextContent());
+					if(dElement.getAttribute("key").equals(X_KEY)) Y = Float.valueOf(dElement.getTextContent());
+					else if(dElement.getAttribute("key").equals(Y_KEY)) X = Float.valueOf(dElement.getTextContent());
 					else if(dElement.getAttribute("key").equals(OSMID_KEY)) ID = dElement.getTextContent();
 				}
 				control.Node n = new control.Node(ID, X, Y);

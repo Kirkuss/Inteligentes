@@ -18,8 +18,6 @@ public class SearchAlg {
 	
 	public SearchAlg(boolean prune) {
 		this.prune = prune;
-		this.visited = new Hashtable<String, TreeNode>();
-		this.nodeCount = 0;
 	}
 	
 	public void setHeu(int heu) {
@@ -27,34 +25,60 @@ public class SearchAlg {
 	}
 	
 	public String Busqueda_Acotada(Problem prob, String estrategia, int Prof_Max) throws NoSuchAlgorithmException {
-		//Proceso de inicializacion
 		this.prob = prob;
+		this.nodeCount = 0;
+		this.prob.getInSt().calculateMD5();
 		fringe = new Frontier();
-		TreeNode n_inicial = new TreeNode(null, prob.getInSt(), 0, 0, 0);
+		visited = new Hashtable<String, TreeNode>();
+		TreeNode n_inicial = new TreeNode(null, this.prob.getInSt(), 0, 0, 0);
 		TreeNode n_actual = new TreeNode();
 		fringe.Insert(n_inicial);
 		nodeCount++;
 		boolean solucion = false;
-		//Bucle de busqueda
 		while (!solucion && !fringe.isEmpty()) {
 			n_actual = fringe.Remove();
+			if (prune) { updateVisited(n_actual);}
 			if (prob.isGoal(n_actual.getCurrentState())) {
 				solucion = true;
 			}else {
 				ArrayList<control.Node> LS = prob.Sucesores(n_actual.getCurrentState());
-				PriorityQueue<TreeNode> LN = CreaListaNodosArbol(LS, n_actual, Prof_Max, estrategia);
-				visited.put(n_actual.getCurrentState().getId(), n_actual);
-				nodeCount += LN.size();
-				fringe.insertaLista(LN);
+				ArrayList<TreeNode> LN = CreaListaNodosArbol(LS, n_actual, Prof_Max, estrategia);
+				insertTreeNodes(LN, n_actual);
 			}
 		}
 		if (solucion) {
 			DecimalFormat df = new DecimalFormat("###.##");
 			endNode = n_actual;
-			return "\nSOLUTION DEPTH: " + (n_actual.getDepth() + 1) + "\nGENERATED NODES: " + nodeCount + "\nESTRATEGY: " + estrategia + "\nTOTAL COST: " + df.format(n_actual.getCost()/1000) + " km\n" + CreaSolucion(n_actual);
+			return "\nSOLUTION DEPTH: " + (n_actual.getDepth() + 1) + "\nINSERTED NODES: " + nodeCount + "\nESTRATEGY: " + estrategia + "\nTOTAL COST: " + df.format(n_actual.getCost()/1000) + " km\n" + CreaSolucion(n_actual);
 		}else {
-			visited.clear();
+			//DecimalFormat df = new DecimalFormat("###.##");
+			//return "\nSOLUTION DEPTH: " + (n_actual.getDepth() + 1) + "\nINSERTED NODES: " + nodeCount + "\nESTRATEGY: " + estrategia + "\nTOTAL COST: " + df.format(n_actual.getCost()/1000) + " km\n" + CreaSolucion(n_actual);
 			return "";
+		}
+	}
+	
+	private void updateVisited(TreeNode n_actual) {
+		if(!visited.contains(n_actual.getCurrentState().getId())) {
+			visited.put(n_actual.getCurrentState().getId(), n_actual);
+		}else if(isBetter(n_actual)){
+			visited.replace(n_actual.getCurrentState().getId(), n_actual);
+		};
+	}
+	
+	private void insertTreeNodes(ArrayList<TreeNode> LN, TreeNode n_actual) {
+		for(int i = 0; i<LN.size(); i++) {
+			if(prune) {
+				if(!visited.containsKey(LN.get(i).getCurrentState().getId())) {
+					fringe.Insert(LN.get(i));
+					nodeCount++;
+				}else if(isBetter(LN.get(i))) {
+					fringe.Insert(LN.get(i));
+					nodeCount++;
+				}
+			}else {
+				fringe.Insert(LN.get(i));
+				nodeCount++;
+			}
 		}
 	}
 	
@@ -72,12 +96,13 @@ public class SearchAlg {
 		return solucion;
 	}
 	
-	public PriorityQueue<TreeNode> CreaListaNodosArbol(ArrayList<control.Node> LS, TreeNode n_actual, int Prof_Max, String estrategia) throws NoSuchAlgorithmException{
-		PriorityQueue<TreeNode> LN = new PriorityQueue<TreeNode>();
+	public ArrayList<TreeNode> CreaListaNodosArbol(ArrayList<control.Node> LS, TreeNode n_actual, int Prof_Max, String estrategia) throws NoSuchAlgorithmException{
+		ArrayList<TreeNode> LN = new ArrayList<TreeNode>();
 		double f = 0;
 		int prof_Act = n_actual.getDepth();
 		int prof_Sig = prof_Act + 1;
 		for(int i = 0; i<LS.size(); i++) {
+		//while(!LS.isEmpty()) {
 			control.Node listNode = LS.get(i);
 			State st = new State(listNode.getID());
 			st.setListNodes(n_actual.getCurrentState().getListNodes());
@@ -92,25 +117,19 @@ public class SearchAlg {
 				f = prof_Sig;
 				break;
 			case "GRE":
-				f = setHeu(st, heuristic);
+				if(!st.getListNodes().isEmpty()) {
+					f = setHeu(st, heuristic);
+				}else { f = 0;}
 				break;
 			case "A*":
-				f = setHeu(st, heuristic) + (listNode.getF() + n_actual.getCost());
+				if(!st.getListNodes().isEmpty()) {
+					f = setHeu(st, heuristic) + (listNode.getF() + n_actual.getCost());
+				}else { f = 0;}
 				break;
 			}
-			st.setListNodes(n_actual.getCurrentState().getListNodes());
 			if(!(prof_Sig > Prof_Max)) {
 				TreeNode listTree = new TreeNode(n_actual, st, prof_Sig, listNode.getF() + n_actual.getCost(), f);
-				if(prune) {
-					if(!visited.containsKey(listTree.getCurrentState().getId())) {
-						LN.add(listTree);
-					}else if(isBetter(listTree)){
-						visited.put(listTree.getCurrentState().getId(), listTree);
-						LN.add(listTree);
-					}
-				}else {
-					LN.add(listTree);
-				}
+				LN.add(listTree);
 			}
 		}
 		return LN;
@@ -136,10 +155,11 @@ public class SearchAlg {
 			actual_Dist = calculateDistance(nActual,tn2);
 			if(actual_Dist < min) {
 				min = actual_Dist;
-				heu = actual_Dist;
+				actual_Dist = 0;
 			}
 		}
 
+		heu = min;
 		min = 999999;
 
 		if(tipo == 1) {

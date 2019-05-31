@@ -6,15 +6,13 @@ import java.util.PriorityQueue;
 
 public class Frontier {
 	private PriorityQueue<TreeNode> frontier;
-	private ArrayList<String> addedNodes;
 	
 	public Frontier() {
 		frontier = new PriorityQueue<TreeNode>();
-		addedNodes = new ArrayList<String>();
 	}
 	
 	public void Insert(TreeNode tn) {
-		frontier.add(tn);
+		frontier.add(tn);	
 	}
 	
 	private void reInsert(ArrayList<TreeNode> reInsert) {
@@ -23,23 +21,23 @@ public class Frontier {
 		}
 	}
 	
-	public boolean alreadyInside(TreeNode tn) {
-		return addedNodes.contains(tn.getCurrentState().getNode());
-	}
-	
-	public void insertaLista(PriorityQueue<TreeNode> LN) {
-		while(!LN.isEmpty()) { Insert(LN.poll());}
-	}
-	
-	public void Clear() {
-		frontier.clear();
-		addedNodes.clear();
-	}
-
 	public TreeNode Remove() {
-		TreeNode tn = frontier.poll();
-		addedNodes.remove(tn.getCurrentState().getNode());
-		return tn;
+		return frontier.poll();
+	}
+	
+	public TreeNode RetrieveTreeNode(String key) {
+		ArrayList<TreeNode> reInsert = new ArrayList<TreeNode>();
+		while(!frontier.isEmpty()) {
+			TreeNode next = frontier.poll();
+			if(next.getCurrentState().getId().equals(key)) {
+				reInsert(reInsert);
+				return next;
+			}else {
+				reInsert.add(next);
+			}
+		}
+		reInsert(reInsert);
+		return null;
 	}
 	
 	public boolean isEmpty() {

@@ -26,4 +26,14 @@ public class Edge {
 	
 	@Override
 	public String toString() { return "(" + src + ", " + tgt + ", " + name + ", " + length + ")";}
+	
+	public int compareTo(Edge o) {
+		if (length > o.getLength()) {
+			return -1;
+		} else if ( length < o.getLength()) {
+			return 1;
+		} else {
+			return 0;
+		}
+	}
 }

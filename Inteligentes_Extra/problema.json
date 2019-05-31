@@ -1,9 +1,1 @@
-{
-    "graphlmfile": "Ciudad Real/data/Anchuras.graphml.xml",
-    "IntSt": {
-                "node": "4331431334",
-                "listNodes": ['4331489575', '4331489683', '4762868814'],
-                "id": "f4b616551965fb586e608397c308bf0f"
-             }
-}
-
+{"graphlmfile": "Ciudad Real/data/Ciudad Real.graphml", "IntSt": {"node": "4080450611", "listNodes": ["528058467", "803292783", "828479647"], "id": "66e46586a8c33151a064ed4c9e9410de"}}
