@@ -3,7 +3,6 @@ package control;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Hashtable;
-import java.util.PriorityQueue;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -18,11 +17,9 @@ public class StateSpace {
 		return g;
 	}
 
-
 	public void setG(Graph g) {
 		this.g = g;
 	}
-
 
 	public Hashtable<String, control.Node> getListNodes() {
 		return listNodes;
@@ -38,7 +35,6 @@ public class StateSpace {
 		g = new Graph(file);
 		listNodes = g.getNodes();
 	}
-	
 	
 	public ArrayList<control.Node> Succesors(State st){
 		ArrayList<control.Node> succesors = new ArrayList<control.Node>();

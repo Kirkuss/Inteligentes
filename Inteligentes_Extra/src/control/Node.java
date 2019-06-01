@@ -1,6 +1,6 @@
 package control;
 
-public class Node implements Comparable<Node>{
+public class Node{
 	private String ID;
 	private float X;
 	private float Y;
@@ -19,15 +19,4 @@ public class Node implements Comparable<Node>{
 	public void setF(double f) { this.f = f;}
 	
 	public String toString() { return ID + " - " + X + "(X) " + Y + "(Y)";}
-	
-	public int compareTo(Node o) {
-		if (f > o.getF()) {
-			return -1;
-		} else if ( f < o.getF()) {
-			return 1;
-		} else {
-			return 0;
-		}
-	}
-	
 }

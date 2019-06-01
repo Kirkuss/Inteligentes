@@ -25,21 +25,6 @@ public class Frontier {
 		return frontier.poll();
 	}
 	
-	public TreeNode RetrieveTreeNode(String key) {
-		ArrayList<TreeNode> reInsert = new ArrayList<TreeNode>();
-		while(!frontier.isEmpty()) {
-			TreeNode next = frontier.poll();
-			if(next.getCurrentState().getId().equals(key)) {
-				reInsert(reInsert);
-				return next;
-			}else {
-				reInsert.add(next);
-			}
-		}
-		reInsert(reInsert);
-		return null;
-	}
-	
 	public boolean isEmpty() {
 		return frontier.isEmpty();
 	}

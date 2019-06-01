@@ -4,7 +4,6 @@ import java.security.NoSuchAlgorithmException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Hashtable;
-import java.util.PriorityQueue;
 
 public class SearchAlg {
 
@@ -51,8 +50,6 @@ public class SearchAlg {
 			endNode = n_actual;
 			return "\nSOLUTION DEPTH: " + (n_actual.getDepth() + 1) + "\nINSERTED NODES: " + nodeCount + "\nESTRATEGY: " + estrategia + "\nTOTAL COST: " + df.format(n_actual.getCost()/1000) + " km\n" + CreaSolucion(n_actual);
 		}else {
-			//DecimalFormat df = new DecimalFormat("###.##");
-			//return "\nSOLUTION DEPTH: " + (n_actual.getDepth() + 1) + "\nINSERTED NODES: " + nodeCount + "\nESTRATEGY: " + estrategia + "\nTOTAL COST: " + df.format(n_actual.getCost()/1000) + " km\n" + CreaSolucion(n_actual);
 			return "";
 		}
 	}
@@ -102,7 +99,6 @@ public class SearchAlg {
 		int prof_Act = n_actual.getDepth();
 		int prof_Sig = prof_Act + 1;
 		for(int i = 0; i<LS.size(); i++) {
-		//while(!LS.isEmpty()) {
 			control.Node listNode = LS.get(i);
 			State st = new State(listNode.getID());
 			st.setListNodes(n_actual.getCurrentState().getListNodes());
@@ -118,12 +114,12 @@ public class SearchAlg {
 				break;
 			case "GRE":
 				if(!st.getListNodes().isEmpty()) {
-					f = setHeu(st, heuristic);
+					f = setHeu(st);
 				}else { f = 0;}
 				break;
 			case "A*":
 				if(!st.getListNodes().isEmpty()) {
-					f = setHeu(st, heuristic) + (listNode.getF() + n_actual.getCost());
+					f = setHeu(st) + (listNode.getF() + n_actual.getCost());
 				}else { f = 0;}
 				break;
 			}
@@ -143,7 +139,7 @@ public class SearchAlg {
 		return false;
 	}
 	
-	private double setHeu(State tn1, int tipo) {
+	private double setHeu(State tn1) {
 		double min = 999999;
 		double heu = 0;
 		double heu0 = 0;
@@ -162,7 +158,7 @@ public class SearchAlg {
 		heu = min;
 		min = 999999;
 
-		if(tipo == 1) {
+		if(heuristic == 1) {
 			for(int i = 0; i<subgoals.size() - 1; i++) {
 				for(int j = i+1; j<subgoals.size(); j++) {
 					control.Node tn3 = prob.getStateSpace().getG().getNode(subgoals.get(i));

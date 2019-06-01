@@ -307,19 +307,24 @@ public class Main {
 	
 	private static void printSuccessors(Scanner aux) {
 		System.out.println("PROVIDE A NODE ID : ");
+		DecimalFormat df = new DecimalFormat("###.##");
 		long id = aux.nextLong();
+		ArrayList <control.Node> succ;
 		System.out.println("Checking if the node exists...");
 		if (g.BelongNode(Long.toString(id))) {
 			State st = new State(Long.toString(id));
 			System.out.println("Printing successors of state AT " + id + " : ");
-			ss.Succesors(st);
+			succ = new ArrayList<control.Node>(ss.Succesors(st));
+			for(int i = 0; i<succ.size(); i++) {
+				System.out.println("I'm in " + id + " and i go to " + succ.get(i).getID() + " with a cost of " + df.format(succ.get(i).getF()));
+			}
 		}
 	}
 	
 	private static void adjacentNode(Scanner aux) {
 		System.out.println("PROVIDE A NODE ID : ");
 		long id = aux.nextLong();
-		System.out.println("Checking if the node exists...");
+		System.out.println("\nChecking if the node exists...");
 		if (g.BelongNode(Long.toString(id))) {
 			ArrayList<Edge> edgeList = g.adjacentNode(Long.toString(id));
 			for(int i=0; i<edgeList.size(); i++) {
